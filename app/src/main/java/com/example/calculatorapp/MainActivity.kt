@@ -118,6 +118,7 @@ class MainActivity : AppCompatActivity() {
                 var tvValue = tvInput?.text.toString()
                 var tvRound = round(tvValue.toDouble())
                 tvInput?.text = tvRound.toInt().toString()
+                lastDot = false
             } else {
                 Toast.makeText(this, "Error: Can only round on answers", Toast.LENGTH_LONG).show()
             }
