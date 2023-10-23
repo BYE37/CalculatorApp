@@ -6,17 +6,24 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import kotlin.math.round
 
 
 class MainActivity : AppCompatActivity() {
+    // Init variables
     private var tvInput: TextView ?= null
     private var buttonClear: Button ?= null
     private var buttonDot: Button ?= null
     private var buttonEqual: Button ?= null
+    private var buttonRound: Button ?= null
     var lastNumeric: Boolean = false
     var lastDot: Boolean = false
     var operator: String ?= null
     var operatorContains: Boolean = false
+    var lastResult: Boolean = false
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -25,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         buttonClear = findViewById(R.id.btnCLR)
         buttonDot = findViewById(R.id.btnDOT)
         buttonEqual = findViewById(R.id.btnEQUAL)
+        buttonRound = findViewById(R.id.btnROUND)
 
         // Listener to clear button
         buttonClear?.setOnClickListener {
@@ -40,6 +48,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // equal button (enter in operation)
         buttonEqual?.setOnClickListener {
             if (lastNumeric && operatorContains) {
                 var tvValue = tvInput?.text.toString()
@@ -83,8 +92,12 @@ class MainActivity : AppCompatActivity() {
 
                         tvInput?.text = (one.toDouble() + two.toDouble()).toString()
                     }
+
+                    // Change booleans for control flow
                     operatorContains = false
                     operator = null
+                    lastResult = true
+
                     // if result contains a dot, set containsdot to true
                     if (tvInput?.text.toString().contains(".")) {
                         lastDot = true
@@ -98,19 +111,38 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Error: Complete equation with values", Toast.LENGTH_LONG).show()
             }
         }
+
+        // round button to int
+        buttonRound?.setOnClickListener {
+            if (lastResult) {
+                var tvValue = tvInput?.text.toString()
+                var tvRound = round(tvValue.toDouble())
+                tvInput?.text = tvRound.toInt().toString()
+            } else {
+                Toast.makeText(this, "Error: Can only round on answers", Toast.LENGTH_LONG).show()
+            }
+
+        }
     }
+
     fun clear() {
         tvInput?.text = ""
         lastNumeric = false
         lastDot = false
         operator = null
         operatorContains = false
+        lastResult = false
     }
 
     fun onDigit(view: View) {
         // Have to ensure null safety
+        // If text starts with 0, remove the 0
+        if (tvInput?.text.toString().startsWith("0") && tvInput?.text.toString().length <= 1 ) {
+            tvInput?.text = ""
+        }
         tvInput?.append((view as Button).text)
         lastNumeric = true
+        lastResult = false
     }
     fun onOperator(view: View) {
         // if text input with text exists, we can call function

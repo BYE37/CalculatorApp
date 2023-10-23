@@ -200,6 +200,14 @@
         >
         <Button
             android:layout_margin="2dp"
+            android:id="@+id/btnROUND"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="Round"
+            />
+        <Button
+            android:layout_margin="2dp"
             android:id="@+id/btnEQUAL"
             android:layout_height="match_parent"
             android:layout_width="0dp"
